@@ -103,6 +103,32 @@ nav a{color:#ccc;text-decoration:none;margin-left:24px}
 <footer class="footer">
   <p>© 2026 Francesco Action — Tous droits réservés</p>
 </footer>
+<section class="section" id="analyse">
+  <h2>Analyse <em>Marketing</em> gratuite</h2>
+  <p class="muted">Colle le texte de ta pub ou décris ton produit. L'IA te donne un diagnostic complet en 30 secondes.</p>
+  <div class="card" style="text-align:left">
+    <textarea id="pubTexte" style="width:100%;min-height:140px;background:#0a0a0f;color:#f5f5f7;border:1px solid #26263a;border-radius:10px;padding:14px;font-family:inherit" placeholder="Exemple : Je vends des sacs à main en cuir à 15 000 FCFA sur WhatsApp. Ma pub actuelle dit : 'Beaux sacs disponibles, DM pour le prix'..."></textarea>
+    <button class="btn" id="btnAnalyse" onclick="lancerAnalyse()">Analyser ma pub</button>
+    <div id="resultat" style="margin-top:20px;white-space:pre-wrap;color:#ccc"></div>
+  </div>
+</section>
+
+<script>
+async function lancerAnalyse() {
+  const btn = document.getElementById('btnAnalyse');
+  const res = document.getElementById('resultat');
+  const texte = document.getElementById('pubTexte').value;
+  if (texte.trim().length < 20) { res.textContent = '⚠️ Écris au moins quelques phrases.'; return; }
+  btn.disabled = true; btn.textContent = 'Analyse en cours…'; res.textContent = '🤖 L\'IA réfléchit…';
+  try {
+    const r = await fetch('/api/analyze', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ texte }) });
+    const data = await r.json();
+    res.textContent = data.analyse || ('Erreur : ' + (data.error || 'inconnue'));
+  } catch (e) { res.textContent = 'Erreur de connexion, réessaie.'; }
+  btn.disabled = false; btn.textContent = 'Analyser ma pub';
+}
+</script>
+
 </body>
 </html>
 
