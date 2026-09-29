@@ -3,14 +3,14 @@ export default async function handler(req, res) {
   const { texte } = req.body || {};
   if (!texte || texte.trim().length < 20) return res.status(400).json({ error: 'Décris ta pub ou ton produit (au moins quelques phrases).' });
 
-  const prompt = `Tu es un expert en marketing digital africain (Cameroun, marchés FCFA). Analyse ce contenu marketing et réponds en français, structuré en 4 parties avec des titres clairs :
-1. ANALYSE : points forts et points faibles
-2. PUBLIC CIBLE : à qui ça parle vraiment, et comment mieux le toucher
-3. ANGLES AMÉLIORÉS : 5 accroches concrètes prêtes à utiliser
-4. NOTE GLOBALE sur 10 avec justification en 2 phrases.
+  const prompt = `Tu es un expert en marketing digital africain (Cameroun, marchés FCFA). Analyse ce contenu marketing et réponds UNIQUEMENT avec les 4 blocs suivants, chacun précédé exactement de son marqueur sur sa propre ligne, sans markdown ni commentaire :
+
+###ANALYSE### points forts et points faibles
+###CIBLE### public cible : à qui ça parle vraiment et comment mieux le toucher
+###ANGLES### 5 accroches concrètes prêtes à utiliser, une par ligne
+###NOTE### note globale sur 10 avec justification en 2 phrases
 
 Contenu à analyser : """${texte}"""`;
-
   const erreurs = [];
 
   // 1) Essai des modèles Gemini
