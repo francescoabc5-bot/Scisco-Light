@@ -4,182 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Francesco Action — Vidéos IA qui vendent</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#0a0a0f;color:#f5f5f7;line-height:1.6}
-.header{display:flex;justify-content:space-between;align-items:center;padding:20px 6%;flex-wrap:wrap;gap:10px}
-.logo{font-size:22px;font-weight:bold}
-.logo span{color:#6c5ce7}
-nav a{color:#ccc;text-decoration:none;margin-left:24px}
-.btn{display:inline-block;background:#6c5ce7;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:bold;margin-top:16px}
-.btn.small{padding:8px 18px;margin:0}
-.btn.big{font-size:18px;padding:16px 36px}
-.btn:hover{background:#8b7cf7}
-.hero{text-align:center;padding:90px 6% 60px;max-width:860px;margin:auto}
-.hero h1{font-size:42px;margin-bottom:18px}
-.hero em{color:#6c5ce7;font-style:normal}
-.hero p{color:#bbb;font-size:18px}
-.tags{margin-top:24px;color:#9be79b;display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
-.section{padding:70px 6%;max-width:1100px;margin:auto}
-.section h2{font-size:30px;text-align:center;margin-bottom:12px}
-.section h2 em{color:#6c5ce7;font-style:normal}
-.muted{color:#888;text-align:center;margin-bottom:30px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:30px}
-.card{background:#16161f;border:1px solid #26263a;border-radius:14px;padding:26px;text-align:center}
-.card ul{list-style:none;margin:14px 0}
-.card li{padding:5px 0;color:#ccc}
-.price.featured{border-color:#6c5ce7}
-.amount{font-size:30px;font-weight:bold;color:#6c5ce7;margin:10px 0}
-.faq p{background:#16161f;border:1px solid #26263a;border-radius:10px;padding:18px;margin:12px 0:<a href="#analyse">Analyse gratuite</a>}
-.footer{text-align:center;padding:40px;color:#666;border-top:1px solid #26263a;margin-top:40px}
-@media(max-width:600px){.hero h1{font-size:28px}nav a{margin-left:12px}}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="header">
-  <div class="logo">Francesco <span>Action</span></div>
+  <a class="logo" href="/">Francesco <span>Action</span></a>
   <nav>
-    <a href="#offres">Offres</a>
-    <a href="#exemples">Exemples</a>
-    <a href="#faq">FAQ</a>
-    <a class="btn small" href="#offres">Commencer</a>
+    <a href="offres.html">Offres</a>
+    <a href="exemples.html">Exemples</a>
+    <a href="faq.html">FAQ</a>
+    <a href="analyse.html">Analyse</a>
+    <a href="marketing.html">Marketing IA</a>
+    <a class="btn small" href="offres.html">Commencer</a>
   </nav>
- <a href="#marketing">Marketing IA</a> 
 </header>
 
 <section class="hero">
   <h1>Multiplie tes ventes avec des <em>vidéos IA</em> ultra-réalistes</h1>
   <p>Produits physiques, formations, coaching, services — plus besoin de te filmer ni de payer une agence. Génère tes vidéos prêtes à diffuser en moins de 5 minutes.</p>
-  <a class="btn big" href="#offres">Créer ma première vidéo</a>
+  <a class="btn big" href="marketing.html">Créer ma première vidéo</a>
   <div class="tags">
-    <span>✅ Sans caméra</span>
-    <span>✅ Sans expérience</span>
-    <span>✅ TikTok, Instagram, Facebook & WhatsApp</span>
+    <span>✅ Sans caméra</span><span>✅ Sans expérience</span><span>✅ TikTok, Instagram, Facebook & WhatsApp</span>
   </div>
 </section>
 
-<section class="section" id="exemples">
-  <h2>Des vidéos qui <em>cartonnent</em></h2>
-  <p class="muted">Zone à remplacer par tes propres vidéos de démonstration.</p>
+<section class="section">
+  <h2>Deux outils <em>gratuits</em> pour démarrer</h2>
   <div class="grid">
-    <div class="card">🎬 Vidéo démo 1</div>
-    <div class="card">🎬 Vidéo démo 2</div>
-    <div class="card">🎬 Vidéo démo 3</div>
-  </div>
-</section>
-
-<section class="section" id="offres">
-  <h2>Choisis ton <em>pack de crédits</em></h2>
-  <div class="grid">
-    <div class="card price">
-      <h3>Découverte</h3>
-      <div class="amount">5 000 FCFA</div>
-      <ul><li>✅ 300 crédits</li><li>✅ ≈ 8 vidéos standard</li><li>✅ Modèles image de base</li></ul>
-      <a class="btn" href="https://wa.me/237696706686">Acheter</a>
+    <div class="card">
+      <h3>🔍 Analyse Marketing</h3>
+      <p style="color:#bbb;margin:10px 0">Colle ta pub : l'IA te donne un diagnostic complet (forces, cible, 5 accroches, note sur 10).</p>
+      <a class="btn" href="analyse.html">Essayer</a>
     </div>
-    <div class="card price featured">
-      <h3>Pro</h3>
-      <div class="amount">22 000 FCFA</div>
-      <ul><li>✅ 1 320 crédits</li><li>✅ ≈ 32 vidéos standard</li><li>✅ Tous les modèles</li></ul>
-      <a class="btn" href="https://wa.me/237696706686">Acheter</a>
-    </div>
-    <div class="card price">
-      <h3>Business</h3>
-      <div class="amount">50 000 FCFA</div>
-      <ul><li>✅ 3 500 crédits</li><li>✅ Production multi-produits</li><li>✅ Support prioritaire</li></ul>
-      <a class="btn" href="https://wa.me/237696706686">Acheter</a>
+    <div class="card">
+      <h3>🚀 Marketing IA</h3>
+      <p style="color:#bbb;margin:10px 0">Décris ton produit : script vidéo, accroches TikTok/Meta, message WhatsApp et plan de 7 jours.</p>
+      <a class="btn" href="marketing.html">Essayer</a>
     </div>
   </div>
 </section>
 
-<section class="section" id="faq">
-  <h2>Questions fréquentes</h2>
-  <div class="faq">
-    <p><strong>C'est vraiment sans caméra ?</strong><br>Oui. Tout est généré par intelligence artificielle à partir de ton produit et d'un texte.</p>
-    <p><strong>Combien de temps pour une vidéo ?</strong><br>En moyenne moins de 5 minutes.</p>
-    <p><strong>Comment je paie ?</strong><br>Mobile Money (MTN / Orange). Contacte-nous sur WhatsApp après avoir choisi ton pack.</p>
-  </div>
-</section>
-
-<footer class="footer">
-  <p>© 2026 Francesco Action — Tous droits réservés</p>
-</footer>
-<section class="section" id="analyse">
-  <h2>Analyse <em>Marketing</em> gratuite</h2>
-  <p class="muted">Colle le texte de ta pub ou décris ton produit. L'IA te donne un diagnostic complet en 30 secondes.</p>
-  <div class="card" style="text-align:left">
-    <textarea id="pubTexte" style="width:100%;min-height:140px;background:#0a0a0f;color:#f5f5f7;border:1px solid #26263a;border-radius:10px;padding:14px;font-family:inherit" placeholder="Exemple : Je vends des sacs à main en cuir à 15 000 FCFA sur WhatsApp. Ma pub actuelle dit : 'Beaux sacs disponibles, DM pour le prix'..."></textarea>
-    <button class="btn" id="btnAnalyse" onclick="lancerAnalyse()">Analyser ma pub</button>
-    <div id="resultat" style="margin-top:20px;white-space:pre-wrap;color:#ccc"></div>
-  </div>
-</section>
-
-<script>
-async function lancerAnalyse() {
-  const btn = document.getElementById('btnAnalyse');
-  const res = document.getElementById('resultat');
-  const texte = document.getElementById('pubTexte').value;
-  if (texte.trim().length < 20) { res.textContent = '⚠️ Écris au moins quelques phrases.'; return; }
-  btn.disabled = true; btn.textContent = 'Analyse en cours…'; res.textContent = '🤖 L\'IA réfléchit…';
-  try {
-    const r = await fetch('/api/analyze', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ texte }) });
-    const data = await r.json();
-    res.textContent = data.analyse || ('Erreur : ' + (data.error || 'inconnue'));
-  } catch (e) { res.textContent = 'Erreur de connexion, réessaie.'; }
-  btn.disabled = false; btn.textContent = 'Analyser ma pub';
-}
-</script>
-
-<section class="section" id="marketing">
-  <h2>Marketing <em>IA</em> — ta pub prête en 1 minute</h2>
-  <p class="muted">Décris ton produit, l'IA crée ton script vidéo, tes accroches et ton plan de contenu.</p>
-  <div class="card" style="text-align:left">
-    <input id="produit" placeholder="Ton produit/service (ex : formation en comptabilité à distance à 25 000 FCFA)" style="width:100%;background:#0a0a0f;color:#f5f5f7;border:1px solid #26263a;border-radius:10px;padding:12px;font-family:inherit;margin-bottom:10px">
-    <input id="cible" placeholder="Ta cible (ex : étudiants, mamans entrepreneurs…)" style="width:100%;background:#0a0a0f;color:#f5f5f7;border:1px solid #26263a;border-radius:10px;padding:12px;font-family:inherit">
-    <button class="btn" id="btnMarketing" onclick="lancerMarketing()">Générer ma stratégie</button>
-    <div id="resultatMarketing" style="margin-top:20px"></div>
-  </div>
-</section>
-
-<script>
-function bloc(titre, emoji, contenu) {
-  if (!contenu) return '';
-  return `<div class="card" style="text-align:left;margin-bottom:18px;border-color:#6c5ce7">
-    <h3 style="color:#6c5ce7;margin-bottom:10px">${emoji} ${titre}</h3>
-    <div style="white-space:pre-wrap;color:#ccc">${contenu}</div>
-  </div>`;
-}
-async function lancerMarketing() {
-  const btn = document.getElementById('btnMarketing');
-  const res = document.getElementById('resultatMarketing');
-  const produit = document.getElementById('produit').value;
-  const cible = document.getElementById('cible').value;
-  if (produit.trim().length < 10) { res.innerHTML = '<p style="color:#e79b9b">⚠️ Décris ton produit en une phrase au moins.</p>'; return; }
-  btn.disabled = true; btn.textContent = 'Création en cours…';
-  res.innerHTML = '<p style="color:#888">🤖 L\'IA rédige ton script et ta stratégie…</p>';
-  try {
-    const r = await fetch('/api/marketing', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ produit, cible }) });
-    const data = await r.json();
-    if (!data.analyse) { res.innerHTML = '<p style="color:#e79b9b">Erreur : ' + (data.error || 'inconnue') + '</p>'; }
-    else {
-      const t = data.analyse;
-      const extraire = (m, suivant) => {
-        const i = t.indexOf(m); if (i === -1) return '';
-        const j = suivant ? t.indexOf(suivant, i + m.length) : -1;
-        return t.slice(i + m.length, j === -1 ? undefined : j).trim();
-      };
-      res.innerHTML =
-        bloc('Script vidéo principal', '🎬', extraire('###SCRIPT###', '###TIKTOK###')) +
-        bloc('Accroches TikTok', '⚡', extraire('###TIKTOK###', '###META###')) +
-        bloc('Accroches Facebook / Instagram', '📸', extraire('###META###', '###WHATSAPP###')) +
-        bloc('Message WhatsApp de vente', '💬', extraire('###WHATSAPP###', '###PLAN###')) +
-        bloc('Plan de contenu 7 jours', '📅', extraire('###PLAN###'));
-    }
-  } catch (e) { res.innerHTML = '<p style="color:#e79b9b">Erreur de connexion, réessaie.</p>'; }
-  btn.disabled = false; btn.textContent = 'Générer ma stratégie';
-}
-</script>
-
+<footer class="footer"><p>© 2026 Francesco Action — Tous droits réservés</p></footer>
 </body>
 </html>
-
