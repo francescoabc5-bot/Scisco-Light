@@ -11,28 +11,46 @@ export default async function handler(req, res) {
 
 Contenu à analyser : """${texte}"""`;
 
+  const erreurs = [];
+
+  // 1) Essai des modèles Gemini
   const key = process.env.GEMINI_API_KEY;
-  if (!key) return res.status(500).json({ error: 'Clé absente sur le serveur.' });
-
-  // Plusieurs modèles de secours : si l'un est surchargé, on passe au suivant
-  const modeles = ['gemini-3.8-flash', 'gemini-3.8-flash-lite', 'gemini-2.5-flash', 'gemini-2.0-flash-lite'];
-  let dernierErreur = null;
-
-  for (const modele of modeles) {
-    try {
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modele}:generateContent?key=${key}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      const data = await r.json();
-      if (r.ok && data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-        return res.status(200).json({ analyse: data.candidates[0].content.parts[0].text });
-      }
-      dernierErreur = `${modele} (code ${r.status}) : ` + JSON.stringify(data?.error?.message || data).slice(0, 200);
-    } catch (e) {
-      dernierErreur = `${modele} : ${e.message}`;
+  const modeles = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-2.5-flash'];
+  if (key) {
+    for (const modele of modeles) {
+      try {
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modele}:generateContent?key=${key}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        const data = await r.json();
+        if (r.ok && data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+          return res.status(200).json({ analyse: data.candidates[0].content.parts[0].text });
+        }
+        erreurs.push(`${modele} (${r.status})`);
+      } catch (e) { erreurs.push(`${modele} : ${e.message}`); }
     }
   }
-  res.status(500).json({ error: 'Tous les modèles sont surchargés pour le moment, réessaie dans quelques minutes. Détail : ' + dernierErreur });
+
+  // 2) Secours DeepSeek (si la clé est configurée)
+  const dsKey = process.env.DEEPSEEK_API_KEY;
+  if (dsKey) {
+    try {
+      const r = await fetch('https://api.deepseek.com/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${dsKey}` },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data = await r.json();
+      const reponse = data?.choices?.[0]?.message?.content;
+      if (r.ok && reponse) return res.status(200).json({ analyse: reponse });
+      erreurs.push('deepseek (' + r.status + ')');
+    } catch (e) { erreurs.push('deepseek : ' + e.message); }
+  }
+
+  res.status(500).json({ error: 'Tous les services sont surchargés pour le moment, réessaie dans quelques minutes. Détail : ' + erreurs.join(' | ') });
 }
