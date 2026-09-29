@@ -3,13 +3,13 @@ export default async function handler(req, res) {
   const { produit, cible } = req.body || {};
   if (!produit || produit.trim().length < 10) return res.status(400).json({ error: 'Décris ton produit ou service (au moins une phrase).' });
 
-  const prompt = `Tu es un créateur de contenu publicitaire expert du marché africain (Cameroun, TikTok, WhatsApp, Facebook). Pour ce produit/service, réponds en français structuré :
+const prompt = `Tu es un créateur de contenu publicitaire expert du marché africain (Cameroun, TikTok, WhatsApp, Facebook). Pour ce produit/service, réponds UNIQUEMENT avec les 5 blocs suivants, chacun précédé exactement de son marqueur sur sa propre ligne, sans autre commentaire ni mise en forme markdown :
 
-1. SCRIPT VIDÉO PRINCIPAL (30-45 sec) : format UGC, avec indication scène par scène (visuel + voix off), conçu pour convertir
-2. 3 ACCROCHES TIKTOK (hook de 3 secondes, punchy)
-3. 2 ACCROCHES FACEBOOK/INSTAGRAM (style pub Meta)
-4. MESSAGE WHATSAPP DE VENTE (message direct prêt à envoyer aux prospects)
-5. PLAN DE CONTENU 7 JOURS : un post par jour avec l'idée et la plateforme
+###SCRIPT### puis le script vidéo principal (30-45 sec, format UGC, scène par scène : visuel + voix off)
+###TIKTOK### puis 3 accroches TikTok (hook de 3 secondes), une par ligne
+###META### puis 2 accroches Facebook/Instagram, une par ligne
+###WHATSAPP### puis un message WhatsApp de vente prêt à envoyer
+###PLAN### puis un plan de contenu 7 jours (un post par jour : jour, idée, plateforme)
 
 Produit/Service : """${produit}"""
 Cible (optionnel) : """${cible || 'non précisée'}"""`;
