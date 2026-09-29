@@ -14,7 +14,7 @@ Contenu à analyser : """${texte}"""`;
   const key = process.env.GEMINI_API_KEY;
   if (!key) return res.status(500).json({ error: 'Clé absente sur le serveur (GEMINI_API_KEY non configurée dans Vercel).' });
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${key}`;
   try {
     const r = await fetch(url, {
       method: 'POST',
