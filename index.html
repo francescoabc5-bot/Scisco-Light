@@ -129,6 +129,34 @@ async function lancerAnalyse() {
 }
 </script>
 
+<section class="section" id="marketing">
+  <h2>Marketing <em>IA</em> — ta pub prête en 1 minute</h2>
+  <p class="muted">Décris ton produit, l'IA crée ton script vidéo, tes accroches et ton plan de contenu.</p>
+  <div class="card" style="text-align:left">
+    <input id="produit" placeholder="Ton produit/service (ex : formation en comptabilité à distance à 25 000 FCFA)" style="width:100%;background:#0a0a0f;color:#f5f5f7;border:1px solid #26263a;border-radius:10px;padding:12px;font-family:inherit;margin-bottom:10px">
+    <input id="cible" placeholder="Ta cible (ex : étudiants, mamans entrepreneurs…)" style="width:100%;background:#0a0a0f;color:#f5f5f7;border:1px solid #26263a;border-radius:10px;padding:12px;font-family:inherit">
+    <button class="btn" id="btnMarketing" onclick="lancerMarketing()">Générer ma stratégie</button>
+    <div id="resultatMarketing" style="margin-top:20px;white-space:pre-wrap;color:#ccc"></div>
+  </div>
+</section>
+
+<script>
+async function lancerMarketing() {
+  const btn = document.getElementById('btnMarketing');
+  const res = document.getElementById('resultatMarketing');
+  const produit = document.getElementById('produit').value;
+  const cible = document.getElementById('cible').value;
+  if (produit.trim().length < 10) { res.textContent = '⚠️ Décris ton produit en une phrase au moins.'; return; }
+  btn.disabled = true; btn.textContent = 'Création en cours…'; res.textContent = '🤖 L\'IA rédige ton script et ta stratégie…';
+  try {
+    const r = await fetch('/api/marketing', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ produit, cible }) });
+    const data = await r.json();
+    res.textContent = data.analyse || ('Erreur : ' + (data.error || 'inconnue'));
+  } catch (e) { res.textContent = 'Erreur de connexion, réessaie.'; }
+  btn.disabled = false; btn.textContent = 'Générer ma stratégie';
+}
+</script>
+
 </body>
 </html>
 
