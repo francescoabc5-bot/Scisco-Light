@@ -12,24 +12,27 @@ export default async function handler(req, res) {
 Contenu à analyser : """${texte}"""`;
 
   const key = process.env.GEMINI_API_KEY;
-  if (!key) return res.status(500).json({ error: 'Clé absente sur le serveur (GEMINI_API_KEY non configurée dans Vercel).' });
+  if (!key) return res.status(500).json({ error: 'Clé absente sur le serveur.' });
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${key}`;
-  try {
-    const r = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-    });
-    const data = await r.json();
-    if (!r.ok) {
-      // On affiche l'erreur exacte de Google pour le diagnostic
-      return res.status(500).json({ error: 'Google a répondu : ' + JSON.stringify(data).slice(0, 500) });
+  // Plusieurs modèles de secours : si l'un est surchargé, on passe au suivant
+  const modeles = ['gemini-3.8-flash', 'gemini-3.8-flash-lite', 'gemini-2.5-flash', 'gemini-2.0-flash-lite'];
+  let dernierErreur = null;
+
+  for (const modele of modeles) {
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modele}:generateContent?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      const data = await r.json();
+      if (r.ok && data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+        return res.status(200).json({ analyse: data.candidates[0].content.parts[0].text });
+      }
+      dernierErreur = `${modele} (code ${r.status}) : ` + JSON.stringify(data?.error?.message || data).slice(0, 200);
+    } catch (e) {
+      dernierErreur = `${modele} : ${e.message}`;
     }
-    const analyse = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!analyse) return res.status(500).json({ error: 'Réponse vide de Gemini : ' + JSON.stringify(data).slice(0, 500) });
-    res.status(200).json({ analyse });
-  } catch (e) {
-    res.status(500).json({ error: 'Erreur réseau : ' + e.message });
   }
+  res.status(500).json({ error: 'Tous les modèles sont surchargés pour le moment, réessaie dans quelques minutes. Détail : ' + dernierErreur });
 }
