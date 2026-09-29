@@ -137,23 +137,45 @@ async function lancerAnalyse() {
     <input id="produit" placeholder="Ton produit/service (ex : formation en comptabilité à distance à 25 000 FCFA)" style="width:100%;background:#0a0a0f;color:#f5f5f7;border:1px solid #26263a;border-radius:10px;padding:12px;font-family:inherit;margin-bottom:10px">
     <input id="cible" placeholder="Ta cible (ex : étudiants, mamans entrepreneurs…)" style="width:100%;background:#0a0a0f;color:#f5f5f7;border:1px solid #26263a;border-radius:10px;padding:12px;font-family:inherit">
     <button class="btn" id="btnMarketing" onclick="lancerMarketing()">Générer ma stratégie</button>
-    <div id="resultatMarketing" style="margin-top:20px;white-space:pre-wrap;color:#ccc"></div>
+    <div id="resultatMarketing" style="margin-top:20px"></div>
   </div>
 </section>
 
 <script>
+function bloc(titre, emoji, contenu) {
+  if (!contenu) return '';
+  return `<div class="card" style="text-align:left;margin-bottom:18px;border-color:#6c5ce7">
+    <h3 style="color:#6c5ce7;margin-bottom:10px">${emoji} ${titre}</h3>
+    <div style="white-space:pre-wrap;color:#ccc">${contenu}</div>
+  </div>`;
+}
 async function lancerMarketing() {
   const btn = document.getElementById('btnMarketing');
   const res = document.getElementById('resultatMarketing');
   const produit = document.getElementById('produit').value;
   const cible = document.getElementById('cible').value;
-  if (produit.trim().length < 10) { res.textContent = '⚠️ Décris ton produit en une phrase au moins.'; return; }
-  btn.disabled = true; btn.textContent = 'Création en cours…'; res.textContent = '🤖 L\'IA rédige ton script et ta stratégie…';
+  if (produit.trim().length < 10) { res.innerHTML = '<p style="color:#e79b9b">⚠️ Décris ton produit en une phrase au moins.</p>'; return; }
+  btn.disabled = true; btn.textContent = 'Création en cours…';
+  res.innerHTML = '<p style="color:#888">🤖 L\'IA rédige ton script et ta stratégie…</p>';
   try {
     const r = await fetch('/api/marketing', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ produit, cible }) });
     const data = await r.json();
-    res.textContent = data.analyse || ('Erreur : ' + (data.error || 'inconnue'));
-  } catch (e) { res.textContent = 'Erreur de connexion, réessaie.'; }
+    if (!data.analyse) { res.innerHTML = '<p style="color:#e79b9b">Erreur : ' + (data.error || 'inconnue') + '</p>'; }
+    else {
+      const t = data.analyse;
+      const extraire = (m, suivant) => {
+        const i = t.indexOf(m); if (i === -1) return '';
+        const j = suivant ? t.indexOf(suivant, i + m.length) : -1;
+        return t.slice(i + m.length, j === -1 ? undefined : j).trim();
+      };
+      res.innerHTML =
+        bloc('Script vidéo principal', '🎬', extraire('###SCRIPT###', '###TIKTOK###')) +
+        bloc('Accroches TikTok', '⚡', extraire('###TIKTOK###', '###META###')) +
+        bloc('Accroches Facebook / Instagram', '📸', extraire('###META###', '###WHATSAPP###')) +
+        bloc('Message WhatsApp de vente', '💬', extraire('###WHATSAPP###', '###PLAN###')) +
+        bloc('Plan de contenu 7 jours', '📅', extraire('###PLAN###'));
+    }
+  } catch (e) { res.innerHTML = '<p style="color:#e79b9b">Erreur de connexion, réessaie.</p>'; }
   btn.disabled = false; btn.textContent = 'Générer ma stratégie';
 }
 </script>
