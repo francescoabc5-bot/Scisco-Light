@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing IA — Francesco Action</title>
+<link rel="stylesheet" href="style.css"></head>
+<body>
+<header class="header">
+  <a class="logo" href="/">Francesco <span>Action</span></a>
+  <nav><a href="offres.html">Offres</a><a href="exemples.html">Exemples</a><a href="faq.html">FAQ</a><a href="analyse.html">Analyse</a><a class="btn small" href="offres.html">Commencer</a></nav>
+</header>
+<section class="section" style="padding-top:40px">
+  <h2>Marketing <em>IA</em> — ta pub prête en 1 minute</h2>
+  <p class="muted">Décris ton produit, l'IA crée ton script vidéo, tes accroches et ton plan de contenu.</p>
+  <div class="card" style="text-align:left">
+    <input id="produit" class="champ" placeholder="Ton produit/service (ex : formation en comptabilité à distance à 25 000 FCFA)">
+    <input id="cible" class="champ" placeholder="Ta cible (ex : étudiants, mamans entrepreneurs…)">
+    <button class="btn" id="btnM" onclick="lancer()">Générer ma stratégie</button>
+    <div id="resultatM" class="resultat"></div>
+  </div>
+</section>
+<footer class="footer"><p>© 2026 Francesco Action</p></footer>
+<script>
+function carte(titre, emoji, contenu) {
+  if (!contenu) return '';
+  return '<div class="carte-ia"><h3>' + emoji + ' ' + titre + '</h3><div class="contenu">' + contenu.replace(/</g,'&lt;') + '</div></div>';
+}
+async function lancer() {
+  const btn = document.getElementById('btnM'), res = document.getElementById('resultatM');
+  const produit = document.getElementById('produit').value, cible = document.getElementById('cible').value;
+  if (produit.trim().length < 10) { res.innerHTML = '<p style="color:#e79b9b">⚠️ Décris ton produit en une phrase au moins.</p>'; return; }
+  btn.disabled = true; btn.textContent = 'Création en cours…'; res.innerHTML = '<p style="color:#888">🤖 L\'IA rédige ton script et ta stratégie…</p>';
+  try {
+    const r = await fetch('/api/marketing', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({produit, cible})});
+    const d = await r.json();
+    if (!d.analyse) { res.innerHTML = '<p style="color:#e79b9b">Erreur : ' + (d.error||'inconnue').replace(/</g,'&lt;') + '</p>'; }
+    else {
+      const t = d.analyse;
+      const x = (m, s) => { const i = t.indexOf(m); if (i===-1) return ''; const j = s ? t.indexOf(s, i+m.length) : -1; return t.slice(i+m.length, j===-1?undefined:j).trim(); };
+      res.innerHTML =
+        carte('Script vidéo principal', '🎬', x('###SCRIPT###','###TIKTOK###')) +
+        carte('Accroches TikTok', '⚡', x('###TIKTOK###','###META###')) +
+        carte('Accroches Facebook / Instagram', '📸', x('###META###','###WHATSAPP###')) +
+        carte('Message WhatsApp de vente', '💬', x('###WHATSAPP###','###PLAN###')) +
+        carte('Plan de contenu 7 jours', '📅', x('###PLAN###'));
+      if (!res.innerHTML) res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
+    }
+  } catch (e) { res.innerHTML = '<p style="color:#e79b9b">Erreur de connexion : ' + e.message + '</p>'; }
+  btn.disabled = false; btn.textContent = 'Générer ma stratégie';
+}
+</script>
+</body></html>
