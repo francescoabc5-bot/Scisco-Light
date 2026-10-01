@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scisco Studio — Marketing OS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#0d0d0d;color:#fff;line-height:1.6;min-height:100vh}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;z-index:5}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:80%;max-width:320px;background:#121212;border-radius:0 18px 18px 0;overflow-y:auto;padding:20px 14px;z-index:10;display:none}
+.drawer.open,.overlay.open{display:block}
+.dh{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.dh .sq{width:42px;height:42px;background:#6c5ce7;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:20px}
+.dh .t{font-weight:bold}.dh .s{color:#aaa;font-size:13px}
+.nouveau{display:flex;align-items:center;gap:12px;border:1px solid #333;border-radius:12px;padding:12px;margin-bottom:18px;cursor:pointer;text-decoration:none;color:#fff}
+.nouveau .ic{width:36px;height:36px;background:#2a2a2a;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.nouveau .st{color:#aaa;font-size:12px}
+.cat{color:#aaa;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin:16px 0 8px;padding-left:8px}
+.item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:22px;color:#eee;text-decoration:none;font-size:15px}
+.item .ic{width:22px;text-align:center}
+.item:hover{background:#242424}
+.item.actif{background:#2c2c2c}
+.badge{margin-left:auto;background:#a78bfa;color:#1a1a1a;font-size:9px;font-weight:bold;padding:2px 7px;border-radius:8px;letter-spacing:1px}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 5%}
+.burger{background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+.credits{display:flex;align-items:center;gap:6px;background:#6c5ce7;padding:7px 14px;border-radius:20px;font-weight:bold;font-size:14px;text-decoration:none;color:#fff}
+.avatar{width:36px;height:36px;background:#c0392b;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.sur{color:#a78bfa;letter-spacing:3px;font-size:12px;text-transform:uppercase}
+.hero{text-align:center;padding:40px 6% 20px}
+.hero h1{font-size:30px;margin:8px 0 12px}
+.hero p{color:#bbb;max-width:600px;margin:auto}
+.input-card{max-width:640px;margin:26px auto;background:#1a1a1a;border:1px solid #2e2e2e;border-radius:16px;padding:20px;text-align:left}
+.input-card .top{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.input-card .ic{width:38px;height:38px;background:#2a2a2a;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.champ{width:100%;background:#0d0d0d;color:#fff;border:1px solid #2e2e2e;border-radius:10px;padding:12px;font-family:inherit;margin-bottom:14px}
+.btn{display:inline-block;background:#6c5ce7;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:bold;border:none;cursor:pointer;font-size:15px}
+.btn:hover{background:#8b7cf7}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;max-width:900px;margin:10px auto 60px;padding:0 5%}
+.card{background:#1a1a1a;border:1px solid #2e2e2e;border-radius:14px;padding:20px;text-align:center}
+.card h3{margin-bottom:6px}.card p{color:#aaa;font-size:13px;margin-bottom:12px}
+</style></head>
+<body>
+
+<!-- Tiroir de navigation -->
+<div class="overlay" id="ov" onclick="fermer()"></div>
+<div class="drawer" id="dr">
+  <div class="dh"><div class="sq">S</div><div><div class="t">Scisco Studio</div><div class="s">Marketing OS</div></div></div>
+  <a class="nouveau" href="analyse.html"><div class="ic">✨</div><div><div class="t">Nouveau projet</div><div class="st">Analyser un produit</div></div></a>
+
+  <div class="cat">Menu principal</div>
+  <a class="item" href="analyse.html"><span class="ic">🏷️</span>Analyse Offre</a>
+  <a class="item" href="analyse.html"><span class="ic">👥</span>Segmentation</a>
+  <a class="item" href="analyse.html"><span class="ic">🎯</span>Conscience</a>
+  <a class="item" href="analyse.html"><span class="ic">⚡</span>Angles</a>
+
+  <div class="cat">Création</div>
+  <a class="item actif" href="app.html"><span class="ic">▦</span>Studio</a>
+  <a class="item" href="marketing.html"><span class="ic">🎬</span>Studio Vidéo<span class="badge">NEW</span></a>
+  <a class="item" href="marketing.html"><span class="ic">▶</span>Générateur Vidéo<span class="badge">NEW</span></a>
+  <a class="item" href="marketing.html"><span class="ic">📷</span>UGC Video Creator<span class="badge">NEW</span></a>
+  <a class="item" href="marketing.html"><span class="ic">🧠</span>Marketing IA<span class="badge">NEW</span></a>
+  <a class="item" href="chat.html"><span class="ic">💬</span>Chat IA<span class="badge">NEW</span></a>
+
+  <div class="cat">Bibliothèque</div>
+  <a class="item" href="exemples.html"><span class="ic">🖼️</span>Galerie</a>
+  <a class="item" href="exemples.html"><span class="ic">📄</span>Scripts</a>
+  <a class="item" href="analyse.html"><span class="ic">🔍</span>Analyse Marketing</a>
+
+  <div class="cat">Compte</div>
+  <a class="item" href="chat.html"><span class="ic">💬</span>Chat IA</a>
+  <a class="item" href="faq.html"><span class="ic">⚙️</span>Paramètres</a>
+</div>
+
+<!-- Contenu principal -->
+<header class="header">
+  <button class="burger" onclick="ouvrir()">☰</button>
+  <div style="display:flex;gap:10px;align-items:center">
+    <a class="credits" href="offres.html">⚡ 130</a>
+    <div class="avatar">F</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="sur">Marketing OS</div>
+  <h1>Que souhaitez-vous vendre ?</h1>
+  <p>Décrivez votre produit ou service. Scisco Studio analyse le marché, construit la stratégie et prépare vos campagnes vidéo prêtes à vendre.</p>
+</section>
+
+<div class="input-card">
+  <div class="top"><div class="ic">✨</div><div><strong>Choisissez le produit à analyser</strong><br><span style="color:#aaa;font-size:13px">pour lancer votre stratégie de vente…</span></div></div>
+  <input class="champ" id="prod" placeholder="Ex : formation en comptabilité à distance à 25 000 FCFA">
+  <a class="btn" id="go" href="analyse.html" onclick="preparer(event)">⚡ Analyser mon marché</a>
+</div>
+
+<section class="section" style="max-width:900px;margin:auto;padding:0 5% 10px">
+  <h2 style="font-size:20px;margin-bottom:4px">📁 Mes projets</h2>
+  <p style="color:#aaa;font-size:13px">Reprenez là où vous vous êtes arrêté.</p>
+</section>
+<div class="grid">
+  <div class="card"><h3>🔍 Analyse Marketing</h3><p>Marché, offre, audience, angles & scripts</p><a class="btn" href="analyse.html">Ouvrir</a></div>
+  <div class="card"><h3>🚀 Marketing IA</h3><p>Scripts, accroches & plan de contenu</p><a class="btn" href="marketing.html">Ouvrir</a></div>
+  <div class="card"><h3>💬 Chat IA</h3><p>ChatGPT, Claude, DeepSeek au choix</p><a class="btn" href="chat.html">Ouvrir</a></div>
+</div>
+
+<script>
+function ouvrir(){document.getElementById('dr').classList.add('open');document.getElementById('ov').classList.add('open');}
+function fermer(){document.getElementById('dr').classList.remove('open');document.getElementById('ov').classList.remove('open');}
+function preparer(e){
+  const v=document.getElementById('prod').value;
+  if(v.trim()){try{localStorage.setItem('produitScisco',v)}catch(x){}}
+}
+</script>
+</body></html>
