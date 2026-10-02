@@ -1,5 +1,4 @@
 (function () {
-(function () {
   const CSS = `
 .cw-btn{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:#6c5ce7;color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.5);z-index:9998}
 .cw-btn:hover{background:#8b7cf7}
