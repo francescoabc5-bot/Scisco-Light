@@ -1,4 +1,5 @@
 (function () {
+(function () {
   const CSS = `
 .cw-btn{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:#6c5ce7;color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.5);z-index:9998}
 .cw-btn:hover{background:#8b7cf7}
@@ -38,11 +39,12 @@
   function bulle(texte, qui) {
     const d = document.createElement('div'); d.className = 'cw-m cw-' + qui; d.textContent = texte;
     msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+    return d; // ← CORRECTION : on renvoie l'élément
   }
   function afficherHistorique() {
     msgs.innerHTML = '';
-    if (!historique.length) msgs.innerHTML = '<div class="cw-vide">Pose ta question sur cette page — l\'assistant connaît le contexte.</div>';
-    else historique.forEach(h => bulle(h.content, h.role === 'user' ? 'user' : 'bot'));
+    if (!historique.length) { msgs.innerHTML = '<div class="cw-vide">Pose ta question — l\'assistant connaît le contexte de cette page.</div>'; return; }
+    historique.forEach(h => bulle(h.content, h.role === 'user' ? 'user' : 'bot'));
   }
   btn.onclick = () => { panel.classList.toggle('open'); if (panel.classList.contains('open')) { afficherHistorique(); input.focus(); } };
   panel.querySelector('.cw-fermer').onclick = () => panel.classList.remove('open');
@@ -54,9 +56,8 @@
     historique.push({ role: 'user', content: t });
     const bot = bulle('…', 'bot');
     try {
-      const contexte = 'Contexte de la page : ' + ctx + '. ';
       const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [{ role: 'system', content: 'Tu es l\'assistant de Scisco Studio. ' + contexte }, ...historique.slice(-12)] }) });
+        body: JSON.stringify({ messages: [{ role: 'system', content: 'Tu es l\'assistant de Scisco Studio. Contexte de la page : ' + ctx + '. Réponds en français.' }, ...historique.slice(-12)] }) });
       const d = await r.json();
       if (d.reponse) { bot.textContent = d.reponse; historique.push({ role: 'assistant', content: d.reponse }); }
       else bot.textContent = '⚠️ ' + (d.error || 'Erreur');
