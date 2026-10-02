@@ -5,15 +5,15 @@
 <link rel="stylesheet" href="style.css"></head>
 <body>
 <header class="header">
-  <a class="logo" href="/">Francesco <span>Action</span></a>
-  <nav><a href="offres.html">Offres</a><a href="exemples.html">Exemples</a><a href="faq.html">FAQ</a><a href="marketing.html">Marketing IA</a><a class="btn small" href="offres.html">Commencer</a></nav>
+  <a class="logo" href="app.html">☰ Francesco <span>Action</span></a>
+  <nav><a href="offres.html">Offres</a><a href="faq.html">FAQ</a><a href="marketing.html">Marketing IA</a><a class="btn small" href="offres.html">Commencer</a></nav>
 </header>
 <section class="section" style="padding-top:40px">
-  <h2>Analyse <em>Marketing</em> gratuite</h2>
-  <p class="muted">Colle le texte de ta pub ou décris ton produit. Diagnostic complet en 30 secondes.</p>
+  <h2>Analyse <em>Marketing</em> stratégique</h2>
+  <p class="muted">Colle ta pub ou décris ton activité : diagnostic complet du marché et mécanisme de vente.</p>
   <div class="card" style="text-align:left">
     <textarea id="pubTexte" class="champ" style="min-height:140px" placeholder="Exemple : Je vends des sacs à main en cuir à 15 000 FCFA sur WhatsApp. Ma pub dit : 'Beaux sacs disponibles, DM pour le prix'..."></textarea>
-    <button class="btn" id="btnAnalyse" onclick="lancer()">Analyser ma pub</button>
+    <button class="btn" id="btnAnalyse" onclick="lancer()">Lancer l'analyse complète</button>
     <div id="resultat" class="resultat"></div>
   </div>
 </section>
@@ -23,11 +23,13 @@ function carte(titre, emoji, contenu) {
   if (!contenu) return '';
   return '<div class="carte-ia"><h3>' + emoji + ' ' + titre + '</h3><div class="contenu">' + contenu.replace(/</g,'&lt;') + '</div></div>';
 }
+function titrePartie(t) { return '<h2 style="text-align:center;margin:34px 0 18px;font-size:24px;color:#fff">' + t + '</h2>'; }
 async function lancer() {
   const btn = document.getElementById('btnAnalyse'), res = document.getElementById('resultat');
   const texte = document.getElementById('pubTexte').value;
   if (texte.trim().length < 20) { res.innerHTML = '<p style="color:#e79b9b">⚠️ Écris au moins quelques phrases.</p>'; return; }
-  btn.disabled = true; btn.textContent = 'Analyse en cours…'; res.innerHTML = '<p style="color:#888">🤖 L\'IA réfléchit…</p>';
+  btn.disabled = true; btn.textContent = 'Analyse en cours… (peut prendre 1 min)';
+  res.innerHTML = '<p style="color:#888">🤖 L\'IA étudie ton marché…</p>';
   try {
     const r = await fetch('/api/analyze', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({texte})});
     const d = await r.json();
@@ -35,15 +37,24 @@ async function lancer() {
     else {
       const t = d.analyse;
       const x = (m, s) => { const i = t.indexOf(m); if (i===-1) return ''; const j = s ? t.indexOf(s, i+m.length) : -1; return t.slice(i+m.length, j===-1?undefined:j).trim(); };
-      res.innerHTML =
-        carte('Points forts & faibles', '🔍', x('###ANALYSE###','###CIBLE###')) +
-        carte('Public cible', '🎯', x('###CIBLE###','###ANGLES###')) +
-        carte('5 accroches améliorées', '⚡', x('###ANGLES###','###NOTE###')) +
-        carte('Note globale', '⭐', x('###NOTE###'));
-      if (!res.innerHTML) res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
+      const html =
+        titrePartie('📊 PARTIE 1 — ANALYSE DU MARCHÉ') +
+        carte('Le domaine (secteur d\'activité)', '🌍', x('###SECTEUR###','###ACTEURS###')) +
+        carte('Les acteurs en place', '👥', x('###ACTEURS###','###DYNAMIQUES###')) +
+        carte('Les dynamiques d\'achat', '🔄', x('###DYNAMIQUES###','###OFFRE###')) +
+        carte('Analyse de l\'offre de vente', '💎', x('###OFFRE###','###SEGMENT###')) +
+        carte('Segment d\'audience', '🎯', x('###SEGMENT###','###CONSCIENCE###')) +
+        carte('Conscience du marché', '🧠', x('###CONSCIENCE###','###ANGLES###')) +
+        carte('Angles marketing percutants', '⚡', x('###ANGLES###','###SCRIPTS###')) +
+        titrePartie('🎬 PARTIE 2 — MÉCANISME DE VENTE') +
+        carte('Scripts pour vidéos', '📝', x('###SCRIPTS###','###MECANISME###')) +
+        carte('Le mécanisme dominant', '🔧', x('###MECANISME###','###VOIR###')) +
+        carte('Ce que le prospect doit voir + type de vidéo', '👀', x('###VOIR###'));
+      if (html.replace(titrePartie('x'),'').trim()) { res.innerHTML = html; }
+      else { res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>'; }
     }
   } catch (e) { res.innerHTML = '<p style="color:#e79b9b">Erreur de connexion : ' + e.message + '</p>'; }
-  btn.disabled = false; btn.textContent = 'Analyser ma pub';
+  btn.disabled = false; btn.textContent = 'Lancer l\'analyse complète';
 }
 </script>
 </body></html>
