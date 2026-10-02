@@ -55,7 +55,7 @@ async function lancer() {
         carte('Scripts pour vidéos', '📝', x('###SCRIPTS###','###MECANISME###')) +
         carte('Le mécanisme dominant', '🔧', x('###MECANISME###','###VOIR###')) +
         carte('Ce que le prospect doit voir + type de vidéo', '👀', x('###VOIR###'));
-      res.innerHTML = html;
+      res.innerHTML = html;window.sciscoSauverProjet(document.querySelector('textarea, input#produit').value || 'Analyse', 'analyse', res.innerHTML);
       if (!x('###SECTEUR###','###ACTEURS###') && !t.includes('###')) res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
     }
   } catch (e) { res.innerHTML = '<p style="color:#e79b9b">Erreur de connexion : ' + e.message + '</p>'; }
