@@ -6,14 +6,14 @@
 <body>
 <header class="header">
   <a class="logo" href="app.html">☰ Francesco <span>Action</span></a>
-  <nav><a href="offres.html">Offres</a><a href="faq.html">FAQ</a><a href="marketing.html">Marketing IA</a><a class="btn small" href="offres.html">Commencer</a></nav>
+  <nav><a href="offres.html">Offres</a><a href="faq.html">FAQ</a><a href="analyse.html">Analyse</a><a class="btn small" href="offres.html">Commencer</a></nav>
 </header>
 <section class="section" style="padding-top:40px">
   <h2>🕵️ Espion <em>Concurrent</em></h2>
-  <p class="muted">Colle la pub, le post ou la transcription vidéo d'un concurrent. L'IA décortique sa stratégie et prépare ta contre-attaque.</p>
+  <p class="muted">Décris la pub, l'offre ou l'activité d'un concurrent. L'IA te livre un plan de contre-attaque complet.</p>
   <div class="card" style="text-align:left">
-    <textarea id="contenu" class="champ" style="min-height:140px" placeholder="Colle ici la pub du concurrent, le texte de sa vidéo TikTok, son post Facebook…&#10;&#10;Exemple : 'Mesdames, arrêtez de perdre votre argent avec ces crèmes contrefaites ! J'ai la solution naturelle, 100% efficace, commandez maintenant, stock limité…'"></textarea>
-    <input id="monProduit" class="champ" placeholder="(Optionnel) Ton produit à toi, pour adapter la contre-attaque : ex. savon naturel artisanal 8 000 FCFA">
+    <textarea id="contenu" class="champ" style="min-height:130px" placeholder="Colle la pub du concurrent ou décris son activité. Ex : 'Il vend des robes wax à 12 000 FCFA sur Instagram, ses pubs disent...'. Tu peux aussi coller la transcription de sa vidéo TikTok."></textarea>
+    <input id="monProduit" class="champ" placeholder="(Optionnel) Ton produit/offre à toi, pour une contre-attaque personnalisée">
     <button class="btn" id="btnE" onclick="lancer()">Analyser le concurrent</button>
     <div id="resultat" class="resultat"></div>
   </div>
@@ -26,16 +26,15 @@ function carte(titre, emoji, contenu) {
   if (!contenu) return '';
   return '<div class="carte-ia"><h3>' + emoji + ' ' + titre + '</h3><div class="contenu">' + contenu.replace(/</g,'&lt;') + '</div></div>';
 }
-function titrePartie(t) { return '<h2 style="text-align:center;margin:34px 0 18px;font-size:24px;color:#fff">' + t + '</h2>'; }
 async function lancer() {
   const btn = document.getElementById('btnE'), res = document.getElementById('resultat');
   const contenu = document.getElementById('contenu').value, monProduit = document.getElementById('monProduit').value;
-  if (contenu.trim().length < 20) { res.innerHTML = '<p style="color:#e79b9b">⚠️ Colle le contenu du concurrent.</p>'; return; }
+  if (contenu.trim().length < 20) { res.innerHTML = '<p style="color:#e79b9b">⚠️ Décris le concurrent en quelques phrases au moins.</p>'; return; }
   const verif = await window.sciscoVerifieLimite();
   if (!verif.autorise) { res.innerHTML = '<p style="color:#e79b9b">⛔ ' + (verif.error || 'Limite atteinte.') + ' <a href="offres.html" style="color:#a78bfa">Voir les packs</a></p>'; return; }
   if (typeof verif.reste === 'number') window.sciscoAfficheLimite(verif.reste);
-  btn.disabled = true; btn.textContent = 'Analyse en cours… (peut prendre 1 min)';
-  res.innerHTML = '<p style="color:#888">🤖 L\'IA décortique le concurrent…</p>';
+  btn.disabled = true; btn.textContent = 'Enquête en cours… (peut prendre 1 min)';
+  res.innerHTML = '<p style="color:#888">🕵️ L\'IA démonte la stratégie du concurrent…</p>';
   try {
     const r = await fetch('/api/espion', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({contenu, monProduit})});
     const d = await r.json();
@@ -43,19 +42,15 @@ async function lancer() {
     else {
       const t = d.analyse;
       const x = (m, s) => { const i = t.indexOf(m); if (i===-1) return ''; const j = s ? t.indexOf(s, i+m.length) : -1; return t.slice(i+m.length, j===-1?undefined:j).trim(); };
-      const html =
-        titrePartie('🔍 PROFIL DU CONCURRENT') +
-        carte('Identité', '🪪', x('###IDENTITE###','###STRATEGIE###')) +
-        carte('Sa stratégie de vente', '♟️', x('###STRATEGIE###','###FORCES###')) +
-        titrePartie('⚔️ FORCES ET FAILLES') +
-        carte('Ses forces (à apprendre)', '💪', x('###FORCES###','###FAIBLESSES###')) +
-        carte('Ses faiblesses (à exploiter)', '🕳️', x('###FAIBLESSES###','###ANGLES###')) +
-        titrePartie('🚀 TA CONTRE-ATTAQUE') +
-        carte('Comment le battre : 5 angles', '⚡', x('###ANGLES###','###SCRIPTS###')) +
-        carte('Scripts de contre-attaque vidéo', '🎬', x('###SCRIPTS###','###PLAN###')) +
-        carte("Plan d'action 7 jours", '📅', x('###PLAN###'));
-      res.innerHTML = html;
-      if (!t.includes('###')) res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
+      res.innerHTML =
+        carte('Offre du concurrent', '🔎', x('###OFFRE_CONCURRENT###','###PROMESSE###')) +
+        carte('Sa promesse et le désir exploité', '🧲', x('###PROMESSE###','###FAIBLESSES###')) +
+        carte('Faiblesses et angles morts', '⚔️', x('###FAIBLESSES###','###FORCE_ADOPTER###')) +
+        carte('Ses forces à adopter', '✅', x('###FORCE_ADOPTER###','###DIFFERENCIATION###')) +
+        carte('Comment se différencier', '🚀', x('###DIFFERENCIATION###','###ATTAQUE###')) +
+        carte("Plan d'attaque immédiat", '🎯', x('###ATTAQUE###','###CONTRE_SCRIPT###')) +
+        carte('Script de contre-attaque vidéo', '🎬', x('###CONTRE_SCRIPT###'));
+      if (!res.innerHTML.trim()) res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
     }
   } catch (e) { res.innerHTML = '<p style="color:#e79b9b">Erreur de connexion : ' + e.message + '</p>'; }
   btn.disabled = false; btn.textContent = 'Analyser le concurrent';
