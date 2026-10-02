@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espion Concurrent — Francesco Action</title>
+<link rel="stylesheet" href="style.css"></head>
+<body>
+<header class="header">
+  <a class="logo" href="app.html">☰ Francesco <span>Action</span></a>
+  <nav><a href="offres.html">Offres</a><a href="faq.html">FAQ</a><a href="marketing.html">Marketing IA</a><a class="btn small" href="offres.html">Commencer</a></nav>
+</header>
+<section class="section" style="padding-top:40px">
+  <h2>🕵️ Espion <em>Concurrent</em></h2>
+  <p class="muted">Colle la pub, le post ou la transcription vidéo d'un concurrent. L'IA décortique sa stratégie et prépare ta contre-attaque.</p>
+  <div class="card" style="text-align:left">
+    <textarea id="contenu" class="champ" style="min-height:140px" placeholder="Colle ici la pub du concurrent, le texte de sa vidéo TikTok, son post Facebook…&#10;&#10;Exemple : 'Mesdames, arrêtez de perdre votre argent avec ces crèmes contrefaites ! J'ai la solution naturelle, 100% efficace, commandez maintenant, stock limité…'"></textarea>
+    <input id="monProduit" class="champ" placeholder="(Optionnel) Ton produit à toi, pour adapter la contre-attaque : ex. savon naturel artisanal 8 000 FCFA">
+    <button class="btn" id="btnE" onclick="lancer()">Analyser le concurrent</button>
+    <div id="resultat" class="resultat"></div>
+  </div>
+</section>
+<footer class="footer"><p>© 2026 Francesco Action</p></footer>
+<script src="limite.js"></script>
+<script src="chatwidget.js"></script>
+<script>
+function carte(titre, emoji, contenu) {
+  if (!contenu) return '';
+  return '<div class="carte-ia"><h3>' + emoji + ' ' + titre + '</h3><div class="contenu">' + contenu.replace(/</g,'&lt;') + '</div></div>';
+}
+function titrePartie(t) { return '<h2 style="text-align:center;margin:34px 0 18px;font-size:24px;color:#fff">' + t + '</h2>'; }
+async function lancer() {
+  const btn = document.getElementById('btnE'), res = document.getElementById('resultat');
+  const contenu = document.getElementById('contenu').value, monProduit = document.getElementById('monProduit').value;
+  if (contenu.trim().length < 20) { res.innerHTML = '<p style="color:#e79b9b">⚠️ Colle le contenu du concurrent.</p>'; return; }
+  const verif = await window.sciscoVerifieLimite();
+  if (!verif.autorise) { res.innerHTML = '<p style="color:#e79b9b">⛔ ' + (verif.error || 'Limite atteinte.') + ' <a href="offres.html" style="color:#a78bfa">Voir les packs</a></p>'; return; }
+  if (typeof verif.reste === 'number') window.sciscoAfficheLimite(verif.reste);
+  btn.disabled = true; btn.textContent = 'Analyse en cours… (peut prendre 1 min)';
+  res.innerHTML = '<p style="color:#888">🤖 L\'IA décortique le concurrent…</p>';
+  try {
+    const r = await fetch('/api/espion', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({contenu, monProduit})});
+    const d = await r.json();
+    if (!d.analyse) { res.innerHTML = '<p style="color:#e79b9b">Erreur : ' + (d.error||'inconnue').replace(/</g,'&lt;') + '</p>'; }
+    else {
+      const t = d.analyse;
+      const x = (m, s) => { const i = t.indexOf(m); if (i===-1) return ''; const j = s ? t.indexOf(s, i+m.length) : -1; return t.slice(i+m.length, j===-1?undefined:j).trim(); };
+      const html =
+        titrePartie('🔍 PROFIL DU CONCURRENT') +
+        carte('Identité', '🪪', x('###IDENTITE###','###STRATEGIE###')) +
+        carte('Sa stratégie de vente', '♟️', x('###STRATEGIE###','###FORCES###')) +
+        titrePartie('⚔️ FORCES ET FAILLES') +
+        carte('Ses forces (à apprendre)', '💪', x('###FORCES###','###FAIBLESSES###')) +
+        carte('Ses faiblesses (à exploiter)', '🕳️', x('###FAIBLESSES###','###ANGLES###')) +
+        titrePartie('🚀 TA CONTRE-ATTAQUE') +
+        carte('Comment le battre : 5 angles', '⚡', x('###ANGLES###','###SCRIPTS###')) +
+        carte('Scripts de contre-attaque vidéo', '🎬', x('###SCRIPTS###','###PLAN###')) +
+        carte("Plan d'action 7 jours", '📅', x('###PLAN###'));
+      res.innerHTML = html;
+      if (!t.includes('###')) res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
+    }
+  } catch (e) { res.innerHTML = '<p style="color:#e79b9b">Erreur de connexion : ' + e.message + '</p>'; }
+  btn.disabled = false; btn.textContent = 'Analyser le concurrent';
+}
+</script>
+</body></html>
