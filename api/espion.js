@@ -1,23 +1,25 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Méthode non autorisée' });
   const { contenu, monProduit } = req.body || {};
-  if (!contenu || contenu.trim().length < 20) return res.status(400).json({ error: 'Colle la pub ou le contenu du concurrent (au moins quelques phrases).' });
+  if (!contenu || contenu.trim().length < 20) return res.status(400).json({ error: 'Décris la pub ou l\'activité du concurrent (au moins quelques phrases).' });
 
-  const prompt = `Tu es un analyste concurrentiel spécialiste du marché africain (Cameroun, zone FCFA). Voici le contenu marketing d'un concurrent (pub, transcription de vidéo, post ou description). Produis une contre-analyse stratégique. Réponds UNIQUEMENT avec les 7 blocs suivants, chacun précédé exactement de son marqueur sur sa propre ligne, sans markdown ni commentaire :
+  const prompt = `Tu es un agent de renseignement marketing, expert du marché africain (Cameroun, zone FCFA). On te fournit les observations sur un concurrent. Produis un rapport de contre-attaque. Réponds UNIQUEMENT avec les 7 blocs suivants, chacun précédé exactement de son marqueur sur sa propre ligne, sans markdown ni commentaire :
 
-###IDENTITE### Identité du concurrent : ce qu'il vend, à quel prix, à quelle cible, son positionnement apparent
-###STRATEGIE### Sa stratégie de vente : le mécanisme persuasif utilisé (confiance, urgence, autorité, preuve sociale...), ses déclencheurs d'achat, sa structure de message
-###FORCES### Ses forces : ce qui fonctionne bien dans sa communication et qu'il faut apprendre de lui
-###FAIBLESSES### Ses faiblesses : ce qu'il fait mal ou oublie, les objections clients qu'il ne traite pas, les segments qu'il néglige
-###ANGLES### Comment le battre : 5 angles concrets pour se différencier et capter SES clients, une par ligne
-###SCRIPTS### Contre-attaque en vidéo : 2 scripts courts (30-45 sec, format UGC) qui utilisent ses faiblesses comme levier${monProduit ? ' en tenant compte de mon produit : """' + monProduit + '"""' : ''}
-###PLAN### Plan d'action 7 jours : actions concrètes jour par jour pour exploiter ces découvertes
+###OFFRE_CONCURRENT### Décortique l'offre du concurrent : produit, prix, promesse, cible apparente
+###PROMESSE### Sa promesse principale et ce qu'elle sous-entend (désir profond exploité)
+###FAIBLESSES### Ses faiblesses et angles morts : ce qu'il ne dit pas, ce qu'il fait mal, les insatisfactions probables de ses clients
+###FORCE_ADOPTER### Ses forces à adopter : ce qu'il fait bien et qu'il faut recopier intelligemment
+###DIFFERENCIATION### Comment se différencier : 5 façons concrètes d'être meilleur, différent ou plus crédible que lui
+###ATTAQUE### Plan d'attaque concret : 3 actions immédiates pour capter ses clients (offre, message, canal)
+###CONTRE_SCRIPT### Un script vidéo de 30-45 sec (format UGC, scène par scène) qui positionne notre offre contre la sienne
 
-Contenu du concurrent : """${contenu}"""`;
+Observations sur le concurrent : """${contenu}"""
+Notre produit/service (si fourni) : """${monProduit || 'non précisé'}"""`;
 
   const erreurs = [];
   const messages = [{ role: 'user', content: prompt }];
 
+  // 1) Groq (gratuit, rapide)
   const gqKey = process.env.GROQ_API_KEY;
   if (gqKey) {
     for (const g of ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant']) {
@@ -34,6 +36,7 @@ Contenu du concurrent : """${contenu}"""`;
     }
   }
 
+  // 2) Gemini (gratuit)
   const key = process.env.GEMINI_API_KEY;
   if (key) {
     for (const modele of ['gemini-3.8-flash', 'gemini-3.5-flash-lite']) {
