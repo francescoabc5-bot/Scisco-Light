@@ -18,6 +18,8 @@
   </div>
 </section>
 <footer class="footer"><p>© 2026 Francesco Action</p></footer>
+<script src="limite.js"></script>
+<script src="chatwidget.js"></script>
 <script>
 function carte(titre, emoji, contenu) {
   if (!contenu) return '';
@@ -28,8 +30,10 @@ async function lancer() {
   const btn = document.getElementById('btnAnalyse'), res = document.getElementById('resultat');
   const texte = document.getElementById('pubTexte').value;
   if (texte.trim().length < 20) { res.innerHTML = '<p style="color:#e79b9b">⚠️ Écris au moins quelques phrases.</p>'; return; }
-  btn.disabled = true;const verif = await window.sciscoVerifieLimite();
-  if (!verif.autorise) { res.innerHTML = '<p style="color:#e79b9b">⛔ ' + (verif.error || 'Limite atteinte.') + ' <a href="offres.html" style="color:#a78bfa">Voir les packs</a></p>'; btn.disabled = false; btn.textContent = 'Lancer l\'analyse complète'; return; } btn.textContent = 'Analyse en cours… (peut prendre 1 min)';
+  const verif = await window.sciscoVerifieLimite();
+  if (!verif.autorise) { res.innerHTML = '<p style="color:#e79b9b">⛔ ' + (verif.error || 'Limite atteinte.') + ' <a href="offres.html" style="color:#a78bfa">Voir les packs</a></p>'; return; }
+  if (typeof verif.reste === 'number') window.sciscoAfficheLimite(verif.reste);
+  btn.disabled = true; btn.textContent = 'Analyse en cours… (peut prendre 1 min)';
   res.innerHTML = '<p style="color:#888">🤖 L\'IA étudie ton marché…</p>';
   try {
     const r = await fetch('/api/analyze', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({texte})});
@@ -51,11 +55,11 @@ async function lancer() {
         carte('Scripts pour vidéos', '📝', x('###SCRIPTS###','###MECANISME###')) +
         carte('Le mécanisme dominant', '🔧', x('###MECANISME###','###VOIR###')) +
         carte('Ce que le prospect doit voir + type de vidéo', '👀', x('###VOIR###'));
-      if (html.replace(titrePartie('x'),'').trim()) { res.innerHTML = html; }
-      else { res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>'; }
+      res.innerHTML = html;
+      if (!x('###SECTEUR###','###ACTEURS###') && !t.includes('###')) res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
     }
   } catch (e) { res.innerHTML = '<p style="color:#e79b9b">Erreur de connexion : ' + e.message + '</p>'; }
   btn.disabled = false; btn.textContent = 'Lancer l\'analyse complète';
 }
 </script>
-<script src="chatwidget.js"></script><script src="limite.js"></script></body></html>
+</body></html>
