@@ -28,7 +28,8 @@ async function lancer() {
   const btn = document.getElementById('btnAnalyse'), res = document.getElementById('resultat');
   const texte = document.getElementById('pubTexte').value;
   if (texte.trim().length < 20) { res.innerHTML = '<p style="color:#e79b9b">⚠️ Écris au moins quelques phrases.</p>'; return; }
-  btn.disabled = true; btn.textContent = 'Analyse en cours… (peut prendre 1 min)';
+  btn.disabled = true;const verif = await window.sciscoVerifieLimite();
+  if (!verif.autorise) { res.innerHTML = '<p style="color:#e79b9b">⛔ ' + (verif.error || 'Limite atteinte.') + ' <a href="offres.html" style="color:#a78bfa">Voir les packs</a></p>'; btn.disabled = false; btn.textContent = 'Lancer l\'analyse complète'; return; } btn.textContent = 'Analyse en cours… (peut prendre 1 min)';
   res.innerHTML = '<p style="color:#888">🤖 L\'IA étudie ton marché…</p>';
   try {
     const r = await fetch('/api/analyze', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({texte})});
