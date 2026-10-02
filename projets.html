@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes projets — Francesco Action</title>
+<link rel="stylesheet" href="style.css"></head>
+<body>
+<header class="header">
+  <a class="logo" href="app.html">☰ Francesco <span>Action</span></a>
+  <nav><a href="offres.html">Offres</a><a href="analyse.html">Analyse</a><a href="marketing.html">Marketing IA</a><a class="btn small" href="offres.html">Commencer</a></nav>
+</header>
+<section class="section" style="padding-top:40px">
+  <h2>📁 Mes <em>projets</em></h2>
+  <p class="muted">Toutes tes analyses et stratégies générées, conservées sur cet appareil.</p>
+  <div id="liste"></div>
+</section>
+<footer class="footer"><p>© 2026 Francesco Action</p></footer>
+<script src="projets.js"></script>
+<script src="chatwidget.js"></script>
+<script>
+const liste = document.getElementById('liste');
+const projets = window.sciscoProjetsListe();
+if (!projets.length) liste.innerHTML = '<p class="muted">Aucun projet pour le moment. Lance une analyse ou une stratégie, elle apparaîtra ici automatiquement.</p>';
+else projets.forEach(p => {
+  const d = document.createElement('div');
+  d.className = 'carte-ia';
+  d.innerHTML = '<h3>' + (p.type === 'analyse' ? '🔍' : p.type === 'marketing' ? '🚀' : '🕵️') + ' ' + p.titre.replace(/</g,'&lt;') + '</h3>' +
+    '<div style="color:#888;font-size:12px;margin-bottom:10px">' + p.date + ' · ' + p.type + '</div>' +
+    '<button class="btn" style="margin-right:8px" onclick="voir(' + p.id + ')">Ouvrir</button>' +
+    '<button class="btn" style="background:#333" onclick="supprimer(' + p.id + ')">Supprimer</button>';
+  liste.appendChild(d);
+});
+function voir(id) {
+  const p = projets.find(x => x.id === id);
+  const w = window.open('', '_blank');
+  w.document.write('<html><head><meta charset="UTF-8"><title>' + p.titre + '</title><link rel="stylesheet" href="/style.css"></head><body style="padding:20px"><a href="javascript:window.close()" style="color:#a78bfa">← Fermer</a>' + p.html + '</body></html>');
+  w.document.close();
+}
+function supprimer(id) {
+  if (!confirm('Supprimer ce projet ?')) return;
+  window.sciscoSupprimerProjet(id); location.reload();
+}
+</script>
+</body></html>
