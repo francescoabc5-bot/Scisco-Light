@@ -16,7 +16,7 @@
 
   const DEFAUT = [
     { cat: 'Menu principal', items: [ ['🏷️','Analyse Offre','analyse.html'], ['👥','Segmentation','analyse.html'], ['🎯','Conscience','analyse.html'], ['⚡','Angles','analyse.html'] ] },
-    { cat: 'Création', items: [ ['▦','Studio','app.html'], ['🧠','Marketing IA','marketing.html'], ['🔍','Analyse Marketing','analyse.html'], ['💬','Chat IA','chat.html'] ] },
+    { cat: 'Création', items: [ ['▦','Studio','app.html'], ['🧠','Marketing IA','marketing.html'], ['🕵️','Espion concurrent','espion.html'], ['🔍','Analyse Marketing','analyse.html'], ['💬','Chat IA','chat.html'] ] },
     { cat: 'Bibliothèque', items: [ ['🖼️','Galerie','exemples.html'], ['📄','Scripts','exemples.html'] ] },
     { cat: 'Compte', items: [ ['⚙️','Paramètres','faq.html'] ] }
   ];
