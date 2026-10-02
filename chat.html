@@ -56,5 +56,36 @@ async function envoyer(){
   }catch(e){ bulleIA.innerHTML='<span style="color:#e79b9b">Erreur de connexion : '+e.message+'</span>'; historique.pop(); }
   btn.disabled=false;
 }
-</script>
+<script>
+let modeleChoisi='auto';
+const CLE='chatSciscoHistorique';
+let historique=[];
+try{historique=JSON.parse(localStorage.getItem(CLE)||'[]')}catch(e){historique=[]}
+function sauver(){try{localStorage.setItem(CLE,JSON.stringify(historique.slice(-40)))}catch(e){}}
+document.querySelectorAll('#modeles .sel').forEach(s=>s.onclick=()=>{
+  document.querySelectorAll('#modeles .sel').forEach(x=>x.classList.remove('actif'));
+  s.classList.add('actif'); modeleChoisi=s.dataset.m;
+});
+const msgs=document.getElementById('msgs');
+function aff(){msgs.innerHTML=historique.length?'':'<div class="bulle ia">Pose ta première question…</div>';
+ historique.forEach(h=>{const d=document.createElement('div');d.className='bulle '+(h.role==='user'?'user':'ia');d.textContent=h.content;msgs.appendChild(d);});}
+aff();
+async function envoyer(){
+  const btn=document.getElementById('btnEnvoyer'), saisie=document.getElementById('saisie');
+  const texte=saisie.value.trim(); if(!texte) return;
+  btn.disabled=true; saisie.value='';
+  historique.push({role:'user',content:texte});
+  msgs.innerHTML='';
+  historique.forEach(h=>{const d=document.createElement('div');d.className='bulle '+(h.role==='user'?'user':'ia');d.textContent=h.content;msgs.appendChild(d);});
+  const bIA=document.createElement('div'); bIA.className='bulle ia'; bIA.textContent='…'; msgs.appendChild(bIA);
+  msgs.scrollIntoView(false);
+  try{
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:historique.slice(-20),modele:modeleChoisi})});
+    const d=await r.json();
+    if(d.reponse){historique.push({role:'assistant',content:d.reponse});bIA.textContent=d.reponse+(d.utilise?' — ['+d.utilise+']':'');}
+    else{bIA.textContent='Erreur : '+(d.error||'inconnue');historique.pop();}
+  }catch(e){bIA.textContent='Erreur de connexion : '+e.message;historique.pop();}
+  sauver(); btn.disabled=false;
+}
+    </script>
 </body></html>
