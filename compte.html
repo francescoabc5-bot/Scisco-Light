@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon compte — Francesco Action</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.tabs{display:flex;gap:8px;margin-bottom:20px}
+.tab{flex:1;padding:10px;text-align:center;background:#1a1a1a;border:1px solid #2e2e2e;border-radius:10px;cursor:pointer;color:#ccc}
+.tab.actif{background:#6c5ce7;border-color:#6c5ce7;color:#fff;font-weight:bold}
+.solde{font-size:42px;font-weight:bold;color:#a78bfa;text-align:center;margin:10px 0}
+</style></head>
+<body>
+<header class="header">
+  <a class="logo" href="app.html">☰ Francesco <span>Action</span></a>
+  <nav><a href="offres.html">Offres</a><a class="btn small" href="offres.html">Recharger</a></nav>
+</header>
+<section class="section" style="padding-top:30px">
+  <h2>👤 Mon <em>compte</em></h2>
+  <div class="tabs">
+    <div class="tab actif" id="tabConn" onclick="afficherForm('conn')">Se connecter</div>
+    <div class="tab" id="tabIns" onclick="afficherForm('ins')">Créer un compte</div>
+  </div>
+  <div class="card" style="text-align:left">
+    <input id="email" class="champ" placeholder="Ton adresse email" type="email">
+    <input id="mdp" class="champ" placeholder="Mot de passe (6 caractères min.)" type="password">
+    <button class="btn" id="btnGo" onclick="go()">Connexion</button>
+    <div id="msg" class="resultat"></div>
+  </div>
+  <div id="zoneCompte" style="display:none">
+    <div class="card" style="text-align:center;margin-top:20px">
+      <h3>⚡ Mes crédits</h3>
+      <div class="solde" id="solde">0</div>
+      <a class="btn" href="offres.html">Recharger mes crédits</a>
+    </div>
+    <div class="card" style="text-align:left;margin-top:14px">
+      <h3>ℹ️ Comment ça marche</h3>
+      <ul style="color:#ccc;padding-left:20px">
+        <li>1 analyse marketing = 5 crédits</li>
+        <li>1 stratégie Marketing IA = 3 crédits</li>
+        <li>1 enquête Espion = 5 crédits</li>
+        <li>Les visiteurs non-inscrits ont 3 essais gratuits par jour</li>
+      </ul>
+      <button class="btn" style="background:#333" onclick="deconnecter()">Se déconnecter</button>
+    </div>
+  </div>
+</section>
+<footer class="footer"><p>© 2026 Francesco Action</p></footer>
+<script src="chatwidget.js"></script>
+<script>
+let session = null;
+try { session = JSON.parse(localStorage.getItem('sciscoCompte') || 'null'); } catch (e) {}
+const CLE_EMAIL = 'sciscoCompteEmail';
+
+function afficherForm(qui) {
+  document.getElementById('tabConn').classList.toggle('actif', qui === 'conn');
+  document.getElementById('tabIns').classList.toggle('actif', qui === 'ins');
+  document.getElementById('btnGo').textContent = qui === 'conn' ? 'Connexion' : 'Créer mon compte';
+  mode = qui;
+}
+let mode = 'conn';
+
+if (session && session.email) { document.getElementById('zoneCompte').style.display = 'block'; document.querySelector('.tabs').style.display = 'none'; document.querySelector('.card').style.display = 'none'; solde(); }
+
+async function solde() {
+  try {
+    const r = await fetch('/api/auth', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'solde', email: session.email }) });
+    const d = await r.json();
+    if (d.credits !== undefined) document.getElementById('solde').textContent = d.credits;
+  } catch (e) {}
+}
+async function go() {
+  const email = document.getElementById('email').value.trim(), mdp = document.getElementById('mdp').value;
+  const msg = document.getElementById('msg');
+  if (!email.includes('@') || mdp.length < 6) { msg.innerHTML = '<p style="color:#e79b9b">Email valide + mot de passe 6+ caractères.</p>'; return; }
+  document.getElementById('btnGo').disabled = true;
+  try {
+    const r = await fetch('/api/auth', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action: mode, email, mdp }) });
+    const d = await r.json();
+    if (d.ok) {
+      localStorage.setItem('sciscoCompte', JSON.stringify({ email }));
+      document.querySelector('.tabs').style.display = 'none';
+      document.querySelector('.card').style.display = 'none';
+      document.getElementById('zoneCompte').style.display = 'block';
+      msg.innerHTML = d.message ? '<p style="color:#9be79b">' + d.message + '</p>' : '';
+      solde();
+    } else msg.innerHTML = '<p style="color:#e79b9b">⛔ ' + (d.error || 'Erreur') + '</p>';
+  } catch (e) { msg.innerHTML = '<p style="color:#e79b9b">Erreur de connexion : ' + e.message + '</p>'; }
+  document.getElementById('btnGo').disabled = false;
+}
+function deconnecter() { localStorage.removeItem('sciscoCompte'); location.reload(); }
+</script>
+</body></html> 
