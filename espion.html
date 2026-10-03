@@ -49,8 +49,8 @@ async function lancer() {
         carte('Ses forces à adopter', '✅', x('###FORCE_ADOPTER###','###DIFFERENCIATION###')) +
         carte('Comment se différencier', '🚀', x('###DIFFERENCIATION###','###ATTAQUE###')) +
         carte("Plan d'attaque immédiat", '🎯', x('###ATTAQUE###','###CONTRE_SCRIPT###')) +
-        carte('Script de contre-attaque vidéo', '🎬', x('###CONTRE_SCRIPT###'));
-      if (!res.innerHTML.trim()) window.sciscoSauverProjet(document.getElementById('contenu').value, 'espion', res.innerHTML);res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
+        carte('Script de contre-attaque vidéo', '🎬', x('###CONTRE_SCRIPT###')); window.sciscoSauverProjet(document.getElementById('contenu').value, 'espion', res.innerHTML);
+      if (!res.innerHTML.trim()) res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
     }
   } catch (e) { res.innerHTML = '<p style="color:#e79b9b">Erreur de connexion : ' + e.message + '</p>'; }
   btn.disabled = false; btn.textContent = 'Analyser le concurrent';
