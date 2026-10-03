@@ -48,7 +48,7 @@ async function lancer() {
         carte('Accroches Facebook / Instagram', '📸', x('###META###','###WHATSAPP###')) +
         carte('Message WhatsApp de vente', '💬', x('###WHATSAPP###','###PLAN###')) +
         carte('Plan de contenu 7 jours', '📅', x('###PLAN###'));
-      if (!res.innerHTML.trim()) res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
+      if (!res.innerHTML.trim())window.sciscoSauverProjet(document.getElementById('produit').value, 'marketing', res.innerHTML); res.innerHTML = '<div class="carte-ia"><div class="contenu">' + t.replace(/</g,'&lt;') + '</div></div>';
     }
   } catch (e) { res.innerHTML = '<p style="color:#e79b9b">Erreur de connexion : ' + e.message + '</p>'; }
   btn.disabled = false; btn.textContent = 'Générer ma stratégie';
